@@ -106,24 +106,24 @@ const convertArcXY = a => {
 };
 
 // beginShape :: Nothing -> String
-const beginShape = always("let shape = UIBezierPath()");
+const beginShape = always("var shape = new UIBezierPath();");
 
 // endShape :: String
-const endShape = "shape.close()";
+const endShape = "shape.ClosePath();";
 
 // cgPoint :: Object -> String
 const cgPoint = a => {
-	return `CGPoint(x: ${roundFloat(a.x)}, y: ${roundFloat(a.y)})`;
+	return `new CGPoint(${roundFloat(a.x)}, ${roundFloat(a.y)})`;
 };
 
 // convertMove :: String -> String
 const convertMove = a => {
-	return `shape.move(to: ${a})`;
+	return `shape.MoveTo(${a});`;
 };
 
 // convertLine :: String -> String
 const convertLine = a => {
-	return `shape.addLine(to: ${a})`;
+	return `shape.AddLineTo(${a});`;
 };
 
 // convertCubicCurve :: Object -> String
@@ -144,7 +144,7 @@ const convertCubicCurve = a => {
 		cgPoint
 	)(a);
 
-	return `shape.addCurve(to: ${anchorPoint}, controlPoint1: ${controlPointOne}, controlPoint2: ${controlPointTwo})`;
+	return `shape.AddCurveToPoint(${anchorPoint}, ${controlPointOne}, ${controlPointTwo});`;
 };
 
 // convertQuadraticCurve :: Object -> String
@@ -160,7 +160,7 @@ const convertQuadraticCurve = a => {
 		cgPoint
 	)(a);
 
-	return `shape.addCurve(to: ${anchorPoint}, controlPoint: ${controlPoint})`;
+	return `shape.AddQuadCurveToPoint(${anchorPoint}, ${controlPoint});`;
 };
 
 // convertArc :: Object -> String
@@ -179,7 +179,7 @@ const convertArc = a => {
 	const startAngle = 0;
 	const endAngle = 360;
 
-	return `shape.addArc(withCenter: ${anchor}, radius: ${radius}, startAngle: ${startAngle}, endAngle: ${endAngle}, clockwise: ${clockwise})`;
+	return `shape.AddArc(${anchor}, ${radius}, ${startAngle}, ${endAngle}, ${clockwise});`;
 };
 
 // processPathData :: Array (Array (Number | String)) -> String
